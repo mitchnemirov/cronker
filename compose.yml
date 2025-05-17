@@ -1,0 +1,6 @@
+services:
+  app:
+    build: .
+    volumes:
+      - ./cron:/cron
+      - ./scripts:/scripts
