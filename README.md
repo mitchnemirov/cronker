@@ -46,3 +46,4 @@ services:
 ## TO DO
 
 - [ ] Run as non-root user
+  - Tricky to run cron as non-root *and* allow for UID/GID customization (in progress)

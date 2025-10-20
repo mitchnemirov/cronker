@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-echo "TEST"
+echo "Running as $(id -u):$(id -g). It is currently: $(date '+%Y-%m-%d %H:%M')"

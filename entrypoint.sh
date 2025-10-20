@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-mkdir -p -m 0744 /scripts /cron
-
 chmod +x /scripts/*
 
 cat /cron/* | crontab -
+
+echo "Starting cron with UID:${id -u} and GID:${id -g}..."
 
 cron -f

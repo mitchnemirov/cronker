@@ -1,6 +1,9 @@
 services:
   app:
     build: .
+    environment:
+      - PUID=1000
+      - PGID=100
     volumes:
       - ./cron:/cron
       - ./scripts:/scripts
