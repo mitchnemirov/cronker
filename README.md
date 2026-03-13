@@ -16,7 +16,7 @@ Cronker brings the scheduling magic of cron to pretty much any Docker environmen
 
 1. Use the below Docker Compose example for reference
 1. Bind-mount a directory containing your cron task files to `/cron` and a directory containing any scripts you wish to use in cron tasks to `/scripts`
-  - If acting on files on another containers volume, bind-mount the existing directory to cronker too to give access
+    - If acting on files on another containers volume, bind-mount the existing directory to cronker too to give access
 1. Set `PGID` environment variable to desired group id *(for file permissions)*
 1. Spin up the container
 1. ???
