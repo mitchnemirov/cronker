@@ -2,8 +2,8 @@ services:
   app:
     build: .
     environment:
-      - PUID=1000
       - PGID=100
+      - TZ=America/Los_Angeles
     volumes:
       - ./cron:/cron
       - ./scripts:/scripts

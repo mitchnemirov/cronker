@@ -1,1 +1,1 @@
-* * * * * /bin/bash -l -c "/scripts/test.sh" >> /proc/1/fd/1 2>&1
+* * * * * su -s /bin/bash cronker -c "/scripts/test.sh" >> /proc/1/fd/1 2>&1

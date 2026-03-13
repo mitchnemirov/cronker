@@ -2,12 +2,13 @@ FROM ubuntu:latest
 
 LABEL org.opencontainers.image.source=https://github.com/mitchnemirov/cronker
 
-ENV PUID=1000
 ENV PGID=1000
+ENV TZ=UTC
 
 RUN apt-get update && \
     apt-get install -yqq --no-install-recommends \
-    cron && \
+    cron \
+    tzdata && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf \
@@ -16,13 +17,9 @@ RUN apt-get update && \
     /var/lib/cache \
     /var/lib/log
 
-COPY --chown=${PUID}:${PGID} entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
 RUN mkdir -p -m 0744 /scripts /cron && \
-    chown -R ${PUID}:${PGID} /scripts /cron && \
-    chmod +x /entrypoint.sh && \
-    chmod u+s /usr/sbin/cron
-
-USER ${PUID}:${PGID}
+    chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
