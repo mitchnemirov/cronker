@@ -1,0 +1,1 @@
+${CRON_SCHEDULE} su -s /bin/bash $USER -g $GROUP -c "${COMMAND}" >> /proc/1/fd/1 2>&1

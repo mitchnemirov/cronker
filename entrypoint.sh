@@ -2,21 +2,26 @@
 
 set -euo pipefail
 
-if [ -n "${TZ:-}" ]; then
+if [[ -n "${TZ}" ]]; then
     ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 2>/dev/null || true
     echo ${TZ} > /etc/timezone 2>/dev/null || true
 fi
 
+export USER=$(id -u -n ${PUID})
 groupadd -f -g ${PGID} cronker 2>/dev/null || true
+usermod -g ${PGID} -s /bin/bash $USER 2>/dev/null || true
+export GROUP=$(id -g -n $USER)
 
-if ! id -u cronker &>/dev/null; then
-    useradd -g ${PGID} -s /bin/bash -d /home/cronker cronker 2>/dev/null || true
+mkdir -p /app/scripts
+chown -R ${PUID}:${PGID} /app/scripts
+
+if [[ -n "${SCRIPT}" ]]; then
+    chmod +x /app/scripts/${SCRIPT}
+    COMMAND="/app/scripts/${SCRIPT}"
 fi
 
-mkdir -p /home/cronker /var/log/cronker
-chown -R :${PGID} /home/cronker /scripts /cron /var/log/cronker
-chmod +x /scripts/*
+envsubst < /app/cron.template > /app/cron.task
 
-cat /cron/* | crontab -
+cat /app/cron.task | crontab -
 
-exec cron -f
+exec $@
