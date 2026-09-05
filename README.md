@@ -15,9 +15,9 @@ Cronker brings the scheduling magic of cron to pretty much any Docker environmen
 ## How to Use
 
 1. Use the below Docker Compose example for reference
-1. Bind-mount a directory containing your cron task files to `/cron` and a directory containing any scripts you wish to use in cron tasks to `/scripts`
+1. Bind-mount a directory containing a script you wish to use to `/scripts` (*Or use COMMAND for a simple one-liner*)
     - If acting on files on another containers volume, bind-mount the existing directory to cronker too to give access
-1. Set `PGID` environment variable to desired group id *(for file permissions)*
+1. Set `PUID` and `PGID` environment variables to desired user and group ids *(for file permissions)*
 1. Spin up the container
 1. ???
 1. Profit!
@@ -25,22 +25,23 @@ Cronker brings the scheduling magic of cron to pretty much any Docker environmen
 ## Examples
 
 ### Docker Compose
-
 ```yml
 services:
   cronker:
     image: ghcr.io/mitchnemirov/cronker:prod
     environment:
+      - PUID=1000
       - PGID=100
       - TZ=America/Los_Angeles
+      - CRON_SCHEDULE=* * * * *
+      - COMMAND=echo "Hello" # Command to run - *Only set if not using SCRIPT*
+      - SCRIPT=test.sh # Script to execute from bind-mounted directory - *Only set if not using COMMAND*
     volumes:
-      - /path/to/cron/files:/cron
-      - /path/to/scripts:/scripts
+      - /path/to/scripts:/app/scripts
       - /path/to/existing/files:/path/to/existing/files # Optional; for working on other service bind-mounted directories
 ```
 
 ### Cron Task
-
 ```bash
 # Example: Execute script at midnight every day
 0 * * * * su -s /bin/bash cronker -c "/scripts/script_to_run.sh" >> /proc/1/fd/1 2>&1
@@ -49,5 +50,6 @@ services:
 
 ## TO DO
 
-- [ ] Run as non-root user
+- [x] Run as non-root user
   - *Semi-functional with `su -s /bin/bash cronker -c` in cron task execution.*
+- [ ] Support specifying multiple scripts

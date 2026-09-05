@@ -6,7 +6,7 @@ services:
       - PGID=100
       - TZ=America/Los_Angeles
       - CRON_SCHEDULE=* * * * *
-      - COMMAND=echo "Hello"
+      # - COMMAND=echo "Hello"
       - SCRIPT=test.sh
     volumes:
       - ./scripts:/app/scripts
