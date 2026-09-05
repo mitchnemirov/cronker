@@ -7,6 +7,6 @@ services:
       - TZ=America/Los_Angeles
       - CRON_SCHEDULE=* * * * *
       # - COMMAND=echo "Hello"
-      - SCRIPT=test.sh
+      - SCRIPTS=test.sh,test_two.sh
     volumes:
       - ./scripts:/app/scripts

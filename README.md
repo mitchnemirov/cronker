@@ -35,21 +35,15 @@ services:
       - TZ=America/Los_Angeles
       - CRON_SCHEDULE=* * * * *
       - COMMAND=echo "Hello" # Command to run - *Only set if not using SCRIPT*
-      - SCRIPT=test.sh # Script to execute from bind-mounted directory - *Only set if not using COMMAND*
+      - SCRIPTS=test.sh,test_two.sh # Scripts to execute from bind-mounted directory - *Only set if not using COMMAND*
     volumes:
       - /path/to/scripts:/app/scripts
       - /path/to/existing/files:/path/to/existing/files # Optional; for working on other service bind-mounted directories
 ```
 
-### Cron Task
-```bash
-# Example: Execute script at midnight every day
-0 * * * * su -s /bin/bash cronker -c "/scripts/script_to_run.sh" >> /proc/1/fd/1 2>&1
-# Must include blank line at the end of the file
-```
-
 ## TO DO
 
-- [x] Run as non-root user
+- [~] Run as non-root user
   - *Semi-functional with `su -s /bin/bash cronker -c` in cron task execution.*
-- [ ] Support specifying multiple scripts
+  - *Technically just makes file permissions easier...*
+- [x] Support specifying multiple scripts

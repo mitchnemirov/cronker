@@ -12,20 +12,26 @@ groupadd -f -g "${PGID}" cronker 2>/dev/null || true
 usermod -g "${PGID}" -s /bin/bash "$USER" 2>/dev/null || true
 export GROUP=$(id -g -n "$USER")
 
-mkdir -p /app/scripts
 chown -R "${PUID}":"${PGID}" /app/scripts
+chmod +x /app/scripts/*
 
-if [[ -n "${SCRIPT}" ]]; then
-  chmod +x /app/scripts/"${SCRIPT}"
-  export COMMAND="/app/scripts/${SCRIPT}"
+touch /app/cron.task
+
+if [[ -n "${SCRIPTS}" ]]; then
+  IFS=, read -r -a scripts <<< "${SCRIPTS}"
+  for script in "${scripts[@]}"; do
+    echo "Adding crontab entry for $script"
+    export COMMAND="/app/scripts/$script"
+    envsubst < /app/cron.template >> /app/cron.task
+  done
 elif [[ -n "${COMMAND}" ]]; then
+  echo "Adding crontab entry for $COMMAND"
   export COMMAND="${COMMAND}"
+  envsubst < /app/cron.template > /app/cron.task
 else
   echo "Need at least SCRIPT or COMMAND set."
   exit 1
 fi
-
-envsubst < /app/cron.template > /app/cron.task
 
 cat /app/cron.task | crontab -
 
